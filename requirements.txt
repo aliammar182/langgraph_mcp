@@ -1,0 +1,8 @@
+requests>=2.31.0          # For GitHub API calls
+python-dotenv>=1.0.0      # For environment variables
+mcp[cli]>=1.4.0          # For MCP server functionality
+notion-client>=2.3.0      # For Notion integration
+langgraph>=0.4.7          # For agentic functionality
+langchain-openai>=0.3.18 # For OpenAI integration
+langchain-mcp-adapters>= 0.1.1 # For MCP integration
+

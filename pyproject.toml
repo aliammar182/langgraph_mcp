@@ -1,0 +1,15 @@
+[project]
+name = "pr-reviewer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-mcp-adapters>=0.1.1",
+    "langchain-openai>=0.3.18",
+    "langgraph>=0.4.7",
+    "mcp[cli]>=1.9.0",
+    "notion-client>=2.3.0",
+    "python-dotenv>=1.1.0",
+    "requests>=2.32.3",
+]
