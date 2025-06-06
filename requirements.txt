@@ -5,4 +5,6 @@ notion-client>=2.3.0      # For Notion integration
 langgraph>=0.4.7          # For agentic functionality
 langchain-openai>=0.3.18 # For OpenAI integration
 langchain-mcp-adapters>= 0.1.1 # For MCP integration
+supabase>=2.3.0          # For Supabase integration
+openai>=1.12.0           # For OpenAI embeddings
 

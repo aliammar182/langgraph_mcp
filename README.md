@@ -1,131 +1,127 @@
+# PR Reviewer with Supabase Integration
 
-# 🚀 MCP PR Analyzer
+An AI-powered PR analysis tool that uses OpenAI's GPT-4 and embeddings to analyze pull requests and store conversations in Supabase.
 
-A modern, tool-augmented AI agent for **automated GitHub Pull Request (PR) analysis** and reporting to Notion, powered by [OpenAI](https://platform.openai.com/), [LangGraph](https://github.com/langchain-ai/langgraph), [MCP](https://github.com/langchain-ai/mcp), and the [Notion SDK](https://github.com/ramnes/notion-sdk-py).  
-Python environment management is fast and reproducible via [`uv`](https://github.com/astral-sh/uv).
+## Features
 
----
+- Automated PR analysis using GPT-4
+- Conversation storage in Supabase
+- Semantic search capabilities using OpenAI embeddings
+- Integration with Notion for documentation
 
-## ✨ Features
+## Prerequisites
 
-- **Automated PR Analysis**: Review and summarize GitHub PRs using GPT-4 and LangGraph.
-- **MCP Server**: Tool-based architecture for extensible agent abilities.
-- **Notion Integration**: Write PR insights directly to your Notion workspace.
-- **Modern Python Management**: Uses `uv` for speedy, consistent environments.
-- **Interactive CLI**: Start, analyze, and save PR reports from your terminal.
+- Python 3.12 or higher
+- [uv](https://github.com/astral-sh/uv) package manager
+- Supabase account and project
+- OpenAI API key
+- Docker (for local Supabase development)
 
----
+## Setup
 
-## 🗂️ Project Structure
-
-```
-.
-├── agent.py              # Main CLI entrypoint and agent runner
-├── pr_analyzer.py        # MCP server: PR and Notion tools
-├── github_integration.py # GitHub API utilities
-├── requirements.txt      # All Python dependencies
-├── .env.example          # Example .env file with required keys
-└── README.md             # This file
-```
-
----
-
-## ⚡ Quickstart
-
-### 1. Install [uv](https://github.com/astral-sh/uv)
-
+1. Clone the repository:
 ```bash
-pip install uv
+git clone <your-repo-url>
+cd <your-repo-name>
 ```
 
-### 2. Clone this repository
-
+2. Create and activate a virtual environment using uv:
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-### 3. Install dependencies
-
+3. Install dependencies:
 ```bash
 uv pip install -r requirements.txt
 ```
 
-### 4. Configure environment variables
-
-Copy `.env.example` to `.env` and fill in your API keys:
-
+4. Create a `.env` file with your credentials:
 ```env
-GITHUB_TOKEN=your_github_token
-NOTION_API_KEY=your_notion_secret
-NOTION_PAGE_ID=your_notion_page_id
-OPENAI_API_KEY=your_openai_key
+OPENAI_API_KEY=your_openai_api_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
 ```
 
-**Environment Variable Details:**
-- `GITHUB_TOKEN`: [GitHub personal access token](https://github.com/settings/tokens) with `repo` scope.
-- `NOTION_API_KEY`: [Notion integration token](https://www.notion.so/my-integrations) (secret_xxx...).
-- `NOTION_PAGE_ID`: ID of your Notion page or database (copy from Notion URL).
-- `OPENAI_API_KEY`: [OpenAI API key](https://platform.openai.com/api-keys).
+## Supabase Local Development Setup
 
----
+1. Install the Supabase CLI:
+```bash
+npm install supabase --save-dev
+```
 
-## 🚦 Usage
+2. Initialize Supabase in your project:
+```bash
+npx supabase init
+```
 
-Start the agent with:
+3. Start the local Supabase stack:
+```bash
+npx supabase start
+```
 
+4. Access your local Supabase instance at http://localhost:54323
+
+5. Get your local Supabase credentials:
+```bash
+npx supabase status
+```
+
+6. Update your `.env` file with local Supabase credentials:
+```env
+SUPABASE_URL=http://localhost:54323
+SUPABASE_KEY=your_local_anon_key
+```
+
+## Database Setup
+
+1. Create the conversations table:
+```sql
+CREATE TABLE conversations (
+  id serial primary key,
+  user_question text not null,
+  chatbot_answer text not null,
+  analysis text not null,
+  timestamp timestamp default current_timestamp
+);
+```
+
+2. Create the notion_embedding table:
+```sql
+CREATE TABLE notion_embedding (
+    id            SERIAL         PRIMARY KEY,
+    conv_id       INT            NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    ques_analysis TEXT           NOT NULL,
+    embedding     VECTOR(1536),
+    created_at    TIMESTAMPTZ    DEFAULT NOW()
+);
+```
+
+## Usage
+
+Run the agent:
 ```bash
 python agent.py
 ```
 
-You'll be prompted:
+The agent will:
+1. Prompt for your question or PR URL
+2. Analyze the PR using GPT-4
+3. Save the conversation to Supabase
+4. Generate and save embeddings for semantic search
 
+## Development
+
+This project uses:
+- `uv` for package management
+- `ruff` for linting
+- `pyproject.toml` for project configuration
+
+To run the linter:
+```bash
+ruff check .
 ```
-❓ What would you like the agent to do?
-```
 
-Paste a PR URL or describe your task. The agent will analyze the PR and offer to save the results to Notion.
-
----
-
-## 🛠️ How It Works
-
-- **agent.py**  
-  Runs the interactive agent, powered by OpenAI + LangGraph, with tool-calling via MCP.
-- **pr_analyzer.py**  
-  Exposes tools to:
-    - Fetch PR data from GitHub
-    - Save analysis to Notion
-- **github_integration.py**  
-  Handles GitHub API authentication and data retrieval.
-
----
-
-## 🧩 Extending
-
-- **Add new tools:** Edit `pr_analyzer.py` to provide more agent abilities.
-- **Change models:** Set a different model in `agent.py`.
-- **Customize Notion output:** Adjust Notion templates in the Notion tool.
-
----
-
-## 🤝 Contributing
-
-PRs and issues are welcome!  
-Please open an issue for bugs or feature requests.
-
----
-
-## 📜 License
+## License
 
 MIT
-
----
-
-## 🌟 Credits
-
-- [OpenAI](https://platform.openai.com/)
-- [LangGraph](https://github.com/langchain-ai/langgraph)
-- [MCP](https://github.com/langchain-ai/mcp)
-- [Notion SDK for Python](https://github.com/ramnes/notion-sdk-py)
-- [uv](https://github.com/astral-sh/uv)
