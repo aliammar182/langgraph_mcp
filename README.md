@@ -1,6 +1,6 @@
-# PR Reviewer with Supabase Integration
+# MCP PR Reviewer with Supabase Integration
 
-An AI-powered PR analysis tool that uses OpenAI's GPT-4 and embeddings to analyze pull requests and store conversations in Supabase.
+An AI-powered PR analysis tool that uses OpenAI's GPT-4 and embeddings to analyze pull requests using MCP (model context protocol) and store conversations in Supabase.
 
 ## Features
 
