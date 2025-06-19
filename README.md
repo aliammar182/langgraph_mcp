@@ -22,7 +22,7 @@ An intelligent agent built with LangGraph and MCP that can analyze pull requests
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/langgraph_mcp.git
+git clone <repo_url>
 cd langgraph_mcp
 ```
 
